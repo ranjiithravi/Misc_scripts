@@ -83,18 +83,23 @@ def intPlanck():
     T_range = np.arange(500, 3500, 100)
     cred1p9_range = np.arange(1000, 1900, 1)
     cred2p2_range = np.arange(1200, 2200, 1)
+    FLIRA8580_range = np.arange(1500, 5000, 1)
 
     cred1p9_int_data = []
     cred2p2_int_data = []
+    FLIRA8580_int_data = []
 
     for T in T_range:
         Planck_rad_cred1p9 = Planck(cred1p9_range, T, emissivity)
         Planck_rad_cred2p2 = Planck(cred2p2_range, T, emissivity)
+        Planck_rad_FLIRA8580 = Planck(FLIRA8580_range, T, emissivity)
 
         cred1p9_int = integrated_radiance(Planck_rad_cred1p9, cred1p9_range)
         cred2p2_int = integrated_radiance(Planck_rad_cred2p2, cred2p2_range)
+        FLIRA8580_int = integrated_radiance(Planck_rad_FLIRA8580, FLIRA8580_range)
         cred1p9_int_data.append(cred1p9_int)
         cred2p2_int_data.append(cred2p2_int)
+        FLIRA8580_int_data.append(FLIRA8580_int)
         # mplt.plot(T, xenics_int, 'ro', label='xenics')
         # mplt.plot(T, peak_int, 'ko', label='peak')
         # mplt.plot(T-273, xenics_int/peak_int, 'bo')
@@ -102,7 +107,8 @@ def intPlanck():
     mplt.figure(1)
     mplt.plot(T_range, cred1p9_int_data, 'ro-', label='CRED 1.0 to 1.9 um', markersize=3)
     mplt.plot(T_range, cred2p2_int_data, 'ko-', label='CRED 1.2 to 2.2 um', markersize=3)
-    mplt.legend(fontsize=fs_ticks, loc='upper left', fancybox=False).get_frame().set_linewidth(0.25)
+    mplt.plot(T_range, FLIRA8580_int_data, 'o-', label='FLIR_A8580 1.5 to 5.0 um', markersize=3)
+    mplt.legend(fontsize=fs_ticks, loc='lower right', fancybox=False).get_frame().set_linewidth(0.25)
     mplt.xlabel('Temperature (K)', fontsize=fs_labels, fontweight='bold')
     mplt.ylabel('Radiance $\mathregular{(Wm^{-2}sr^{-1})}$', fontsize=fs_labels, fontweight='bold')
     mplt.yscale('log')
@@ -113,10 +119,19 @@ def intPlanck():
     mplt.savefig('int_signal.pdf', format='pdf', bbox_inches='tight')
 
     mplt.figure(2)
-    mplt.plot(T_range-273, (np.array(cred2p2_int_data) - np.array(cred1p9_int_data)) / np.array(cred2p2_int_data) * 100, 'bo-', label='% of radiance', markersize=3)
+    #mplt.plot(T_range-273, (np.array(cred2p2_int_data) - np.array(cred1p9_int_data)) / np.array(cred2p2_int_data) * 100,
+    #          'o-', label='% diff. of radiance, CRED2.2 -- CRED1.9', markersize=3)
+    #mplt.plot(T_range-273, (np.array(FLIRA8580_int_data) - np.array(cred2p2_int_data)) / np.array(FLIRA8580_int_data) * 100,
+    #          'o-', label='% diff. of radiance, FLIR_A8580 -- CRED2.2', markersize=3)
+    #mplt.ylabel('% diff. in signal', fontsize=fs_labels, fontweight='bold')
+    mplt.plot(T_range-273, np.array(cred2p2_int_data) / np.array(cred1p9_int_data),
+              'o-', label='signal ratio, CRED2.2 / CRED1.9', markersize=3)
+    mplt.plot(T_range-273, np.array(FLIRA8580_int_data) / np.array(cred2p2_int_data),
+              'o-', label='signal ratio, FLIR_A8580 / CRED2.2', markersize=3)
+    mplt.ylabel('Signal ratio (-)', fontsize=fs_labels, fontweight='bold')
+    mplt.yscale('log')
     mplt.legend(fontsize=fs_ticks, loc='upper right', fancybox=False).get_frame().set_linewidth(0.25)
     mplt.xlabel('Temperature (deg C)', fontsize=fs_labels, fontweight='bold')
-    mplt.ylabel('(2.2 um - 1.9 um)/2.2 um', fontsize=fs_labels, fontweight='bold')
     # mplt.xlim(350, 1750)
     # mplt.ylim(0.3, 1)
     mplt.xticks(fontsize=fs_ticks), mplt.yticks(fontsize=fs_ticks)
