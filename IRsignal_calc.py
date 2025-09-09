@@ -124,9 +124,9 @@ def intPlanck():
     #mplt.plot(T_range-273, (np.array(FLIRA8580_int_data) - np.array(cred2p2_int_data)) / np.array(FLIRA8580_int_data) * 100,
     #          'o-', label='% diff. of radiance, FLIR_A8580 -- CRED2.2', markersize=3)
     #mplt.ylabel('% diff. in signal', fontsize=fs_labels, fontweight='bold')
-    mplt.plot(T_range-273, np.array(cred2p2_int_data) / np.array(cred1p9_int_data),
+    mplt.plot(T_range, np.array(cred2p2_int_data) / np.array(cred1p9_int_data),
               'o-', label='signal ratio, CRED2.2 / CRED1.9', markersize=3)
-    mplt.plot(T_range-273, np.array(FLIRA8580_int_data) / np.array(cred2p2_int_data),
+    mplt.plot(T_range, np.array(FLIRA8580_int_data) / np.array(cred2p2_int_data),
               'o-', label='signal ratio, FLIR_A8580 / CRED2.2', markersize=3)
     mplt.ylabel('Signal ratio (-)', fontsize=fs_labels, fontweight='bold')
     mplt.yscale('log')
