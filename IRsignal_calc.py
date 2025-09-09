@@ -131,7 +131,7 @@ def intPlanck():
     mplt.ylabel('Signal ratio (-)', fontsize=fs_labels, fontweight='bold')
     mplt.yscale('log')
     mplt.legend(fontsize=fs_ticks, loc='upper right', fancybox=False).get_frame().set_linewidth(0.25)
-    mplt.xlabel('Temperature (deg C)', fontsize=fs_labels, fontweight='bold')
+    mplt.xlabel('Temperature (K)', fontsize=fs_labels, fontweight='bold')
     # mplt.xlim(350, 1750)
     # mplt.ylim(0.3, 1)
     mplt.xticks(fontsize=fs_ticks), mplt.yticks(fontsize=fs_ticks)
