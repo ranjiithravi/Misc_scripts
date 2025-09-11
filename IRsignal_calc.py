@@ -81,13 +81,14 @@ def Planck_distribution():
 
 
 def intPlanck():
-    T_range = np.arange(500, 3500, 100)
+    T_range = np.arange(500, 3100, 50)
     cred1p9_range = np.arange(1000, 1900, 1)
     cred2p2_range = np.arange(1200, 2200, 1)
     FLIRA8580_range = np.arange(1500, 5000, 1)
     IR_1to5_range = np.arange(1000, 5000, 1)
     IR_1p5to5p5_range = np.arange(1500, 5500, 1)
     IR_3to5_range = np.arange(3000, 5000, 1)
+    IR_3p7to4p15_range = np.arange(3700, 4150, 1)
 
     cred1p9_int_data = []
     cred2p2_int_data = []
@@ -95,6 +96,7 @@ def intPlanck():
     IR_1to5_int_data = []
     IR_1p5to5p5_int_data = []
     IR_3to5_int_data = []
+    IR_3p7to4p15_int_data =[]
 
     for T in T_range:
         Planck_rad_cred1p9 = Planck(cred1p9_range, T, emissivity)
@@ -103,6 +105,7 @@ def intPlanck():
         Planck_rad_IR_1to5 = Planck(IR_1to5_range, T, emissivity)
         Planck_rad_IR_1p5to5p5 = Planck(IR_1p5to5p5_range, T, emissivity)
         Planck_rad_IR_3to5 = Planck(IR_3to5_range, T, emissivity)
+        Planck_rad_IR_3p7to4p15 = Planck(IR_3p7to4p15_range, T, emissivity)
 
         cred1p9_int = integrated_radiance(Planck_rad_cred1p9, cred1p9_range)
         cred2p2_int = integrated_radiance(Planck_rad_cred2p2, cred2p2_range)
@@ -110,6 +113,7 @@ def intPlanck():
         IR_1to5_int = integrated_radiance(Planck_rad_IR_1to5, IR_1to5_range)
         IR_1p5to5p5_int = integrated_radiance(Planck_rad_IR_1p5to5p5, IR_1p5to5p5_range)
         IR_3to5_int = integrated_radiance(Planck_rad_IR_3to5, IR_3to5_range)
+        IR_3p7to4p15_int = integrated_radiance(Planck_rad_IR_3p7to4p15, IR_3p7to4p15_range)
 
         cred1p9_int_data.append(cred1p9_int)
         cred2p2_int_data.append(cred2p2_int)
@@ -117,6 +121,7 @@ def intPlanck():
         IR_1to5_int_data.append(IR_1to5_int)
         IR_1p5to5p5_int_data.append(IR_1p5to5p5_int)
         IR_3to5_int_data.append(IR_3to5_int)
+        IR_3p7to4p15_int_data.append(IR_3p7to4p15_int)
         # mplt.plot(T, xenics_int, 'ro', label='xenics')
         # mplt.plot(T, peak_int, 'ko', label='peak')
         # mplt.plot(T-273, xenics_int/peak_int, 'bo')
@@ -125,9 +130,10 @@ def intPlanck():
     #mplt.plot(T_range, cred1p9_int_data, 'ro-', label='CRED 1.0 to 1.9 um', markersize=3)
     #mplt.plot(T_range, cred2p2_int_data, 'ko-', label='CRED 1.2 to 2.2 um', markersize=3)
     #mplt.plot(T_range, FLIRA8580_int_data, 'o-', label='FLIR_A8580 1.5 to 5.0 um', markersize=3)
-    mplt.plot(T_range, IR_1to5_int_data, 'o-', label='1.0 $-$ 5.0 um', markersize=3)
-    mplt.plot(T_range, IR_1p5to5p5_int_data, 'o-', label='1.5 $-$ 5.5 um', markersize=3)
-    mplt.plot(T_range, IR_3to5_int_data, 'o-', label='3.0 $-$ 5.0 um', markersize=3)
+    mplt.plot(T_range, IR_1to5_int_data, 'o-', label='1.0 $-$ 5.0 $\mu$m', markersize=3)
+    mplt.plot(T_range, IR_1p5to5p5_int_data, 'o-', label='1.5 $-$ 5.5 $\mu$m', markersize=3)
+    mplt.plot(T_range, IR_3to5_int_data, 'o-', label='3.0 $-$ 5.0 $\mu$m', markersize=3)
+    mplt.plot(T_range, IR_3p7to4p15_int_data, 'o-', label='3.7 $-$ 4.15 $\mu$m', markersize=3)
     mplt.legend(fontsize=fs_ticks, loc='lower right', fancybox=False).get_frame().set_linewidth(0.25)
     mplt.xlabel('Temperature (K)', fontsize=fs_labels, fontweight='bold')
     mplt.ylabel('Radiance $\mathregular{(Wm^{-2}sr^{-1})}$', fontsize=fs_labels, fontweight='bold')
@@ -148,12 +154,14 @@ def intPlanck():
     #          'o-', label='signal ratio, CRED2.2 / CRED1.9', markersize=3)
     #mplt.plot(T_range, np.array(FLIRA8580_int_data) / np.array(cred2p2_int_data),
     #          'o-', label='signal ratio, FLIR_A8580 / CRED2.2', markersize=3)
-    mplt.plot(T_range, np.array(IR_1to5_int_data) / np.array(IR_3to5_int_data),
-              'o-', label='signal ratio, 1.0 $-$ 5.0 um / 3.0 $-$ 5.0 um', markersize=3)
-    mplt.plot(T_range, np.array(IR_1p5to5p5_int_data) / np.array(IR_3to5_int_data),
-              'o-', label='signal ratio, 1.5 $-$ 5.5 um / 3.0 $-$ 5.0 um', markersize=3)
+    mplt.plot(T_range, np.array(IR_1to5_int_data) / np.array(IR_3p7to4p15_int_data),
+              'o-', label='signal ratio, 1.0 $-$ 5.0 $\mu$m / 3.7 $-$ 4.15 $\mu$m', markersize=3)
+    mplt.plot(T_range, np.array(IR_1p5to5p5_int_data) / np.array(IR_3p7to4p15_int_data),
+              'o-', label='signal ratio, 1.5 $-$ 5.5 $\mu$m / 3.7 $-$ 4.15 $\mu$m', markersize=3)
+    mplt.plot(T_range, np.array(IR_3to5_int_data) / np.array(IR_3p7to4p15_int_data),
+              'o-', label='signal ratio, 3.0 $-$ 5.0 $\mu$m / 3.7 $-$ 4.15 $\mu$m', markersize=3)
     mplt.plot(T_range, np.array(IR_1to5_int_data) / np.array(IR_1p5to5p5_int_data),
-              'o-', label='signal ratio, 1.0 $-$ 5.0 um / 1.5 $-$ 5.5 um', markersize=3)
+              'ko-', label='signal ratio, 1.0 $-$ 5.0 $\mu$m / 1.5 $-$ 5.5 $\mu$m', markersize=3, alpha=0.5)
     mplt.ylabel('Signal ratio (-)', fontsize=fs_labels, fontweight='bold')
     #mplt.yscale('log')
     mplt.legend(fontsize=fs_ticks, loc='upper left', fancybox=False).get_frame().set_linewidth(0.25)
